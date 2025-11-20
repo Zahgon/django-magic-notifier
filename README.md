@@ -67,7 +67,8 @@ NOTIFIER = {
         "DEFAULT_GATEWAY": "waha",
         "GATEWAYS": {
             "waha": {
-                "BASE_URL": "http://localhost:3000"
+                "BASE_URL": "http://localhost:3000",
+                "API_KEY": "xxxxxxx"
             }
         }
     },
