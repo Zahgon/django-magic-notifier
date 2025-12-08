@@ -37,6 +37,15 @@ pip install --upgrade django-magic-notifier
 
 ## Configuration
 
+Add `magic_notifier` in your `INSTALLED_APPS`
+
+```python
+INSTALLED_APPS = [
+    ...,
+    'magic_notifier',
+]
+```
+
 Add the `NOTIFIER` configuration to your Django `settings.py` file. Below is an example of a complete configuration:
 
 ```python
