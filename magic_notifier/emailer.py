@@ -74,11 +74,6 @@ class Emailer:
             self.tpl_abs_path = None
         logger.info(f"{self.tpl_abs_path = }")
 
-    def mjml_loader(self, dest: str):
-        f_res = os.path.abspath(os.path.join(Path(self.tpl_abs_path).parent, dest))
-        with open(f_res) as fp:
-            res = fp.read()
-        return res
 
     def send(self):
         if self.threaded:

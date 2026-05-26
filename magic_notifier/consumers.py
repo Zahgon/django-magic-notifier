@@ -42,38 +42,10 @@ class PushNotifConsumer(WebsocketConsumer):
             print(traceback.print_exc())
             logger.error(traceback.format_exc())
 
-    def disconnect(self, close_code):
-        try:
-            async_to_sync(self.channel_layer.group_discard)(f"user-{self.user.id}", self.channel_name)
-        except Exception as e:
-            print(traceback.format_exc())
-            logging.error(traceback.format_exc())
 
-    def receive(self, text_data):
-        event = json.loads(text_data)
-        logger.info("{} >> {}".format(self.user, text_data))
-
-        event_handler = getattr(self, event["type"].lower().replace(".", "_"), None)
-        if callable(event_handler):
-            event_handler(event)
 
     def notify(self, data: dict):
         self.send(json.dumps(data))
 
-    def notification(self, data: dict):
-        self.send(json.dumps(data))
 
-    def unread(self, event: dict):
-        notifs = Notification.objects.filter(user=self.user, read__isnull=True)
-        event["count"] = len(notifs)
-        event["notifications"] = NotificationSerializer(notifs, many=True).data
-        self.send(json.dumps(event))
 
-    def markread(self, event: dict):
-        notifs = Notification.objects.filter(user=self.user, read__isnull=True)
-        notification_id = event.get('notification')
-        if notification_id:
-            notifs = notifs.filter(pk=notification_id)
-        notifs.update(read=timezone.now())
-        event["success"] = True
-        self.send(json.dumps(event))

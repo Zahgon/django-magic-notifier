@@ -42,15 +42,6 @@ class NotificationBuilder:
         self.__text = text
         return self
 
-    def subject(self, subject=None):
-        if subject is None:
-            return self.__subject
-
-        if not isinstance(subject, str):
-            raise ValueError("text should be a string")
-
-        self.__subject = subject
-        return self
 
     def link(self, link=None):
         if link is None:
@@ -72,23 +63,7 @@ class NotificationBuilder:
         self.__mode = mode
         return self
 
-    def type(self, type: str = None, sub_stype: str = None):
-        if type is None:
-            return self.__type, self.__sub_type
 
-        self.__type = type
-        self.__sub_type = sub_stype
-        return self
-
-    def action(self, index: int = None, text=None, method: str = None,
-               url: str = None, params: dict = None, json_data: dict = None):
-        if index is not None:
-            return self.__actions[index]
-
-        action = {"method": method, "url": url, "text": text, "params": params,
-                  "json_data": json_data}
-        self.__actions.append(action)
-        return self
 
     def actions(self, actions: list = None):
         if actions is None:
@@ -139,33 +114,8 @@ class NotificationBuilder:
         self.__image = image
         return self
 
-    def is_encrypted(self, is_encrypted: bool = None):
-        if is_encrypted is None:
-            return self.__is_encrypted
 
-        self.__is_encrypted = is_encrypted
-        return self
 
-    def is_visible(self, is_visible: bool = None):
-        if is_visible is None:
-            return self.__is_visible
-
-        self.__is_visible = is_visible
-        return self
-
-    def expires(self, expiry_dt: Union[datetime, timedelta] = None):
-        if expiry_dt is None:
-            return self.__expires
-
-        if not isinstance(expiry_dt, (datetime, timedelta)):
-            raise ValueError("expiry_dt should be a datetime or timedelta")
-
-        if isinstance(expiry_dt, datetime):
-            self.__expires = expiry_dt
-        else:
-            self.__expires = timezone.now() + expiry_dt
-
-        return self
 
     def save(self):
         return Notification.objects.create(
@@ -184,14 +134,6 @@ class NotificationBuilder:
             expires=self.__expires
         )
 
-    def show(self):
-        return (
-            f"(text={self.__text}, link={self.__link}, user={self.__user}, "
-            f"type={self.__type}, sub_stype={self.__sub_type}, mode={self.__mode}, "
-            f"data={self.__data}, actions={self.__actions}, image={self.__image}, "
-            f"is_encrypted={self.__is_encrypted}, is_visible={self.__is_visible}, "
-            f"expires={self.__expires})"
-        )
 
 
 def import_attribute(class_path:str) -> Any:
@@ -218,9 +160,4 @@ def get_settings(name:str) -> Any:
     return res
 
 
-def get_user_from_ws_token(token: str) -> User:
-    from rest_framework.authtoken.models import Token
-    return Token.objects.get(key=token).user
 
-def get_fcm_token_from_user(user: User) -> list:
-    return []

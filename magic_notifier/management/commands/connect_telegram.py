@@ -10,15 +10,4 @@ class Command(BaseCommand):
     """The command `test_email_template` is used to test a template email.
     This is very useful in development."""
 
-    def add_arguments(self, parser):
-        parser.add_argument('gateway', type=str, help="The gateway to connect")
 
-    def handle(self, *args, **options):
-
-        try:
-            gateway = options['gateway']
-            TelethonClient.get_client(gateway, **settings.NOTIFIER['TELEGRAM']['GATEWAYS'][gateway])
-            print('Done!')
-        except Exception:
-            import traceback
-            traceback.print_exc()
